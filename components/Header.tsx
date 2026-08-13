@@ -1,10 +1,19 @@
 "use client";
 
-import { Clock, Users, LayoutDashboard, ClipboardList, UserPlus } from "lucide-react";
+import {
+  Clock,
+  Users,
+  LayoutDashboard,
+  ClipboardList,
+  Moon,
+  Sun,
+} from "lucide-react";
 
 interface HeaderProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  darkMode: boolean;
+  onToggleTheme: () => void;
 }
 
 const tabs = [
@@ -14,9 +23,14 @@ const tabs = [
   { id: "staff", label: "Pengurusan Staff", icon: Users },
 ];
 
-export default function Header({ activeTab, onTabChange }: HeaderProps) {
+export default function Header({
+  activeTab,
+  onTabChange,
+  darkMode,
+  onToggleTheme,
+}: HeaderProps) {
   return (
-    <header className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+    <header className="app-header border-b sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center gap-3">
@@ -31,29 +45,39 @@ export default function Header({ activeTab, onTabChange }: HeaderProps) {
             </div>
           </div>
 
-          <nav className="hidden md:flex items-center gap-1">
-            {tabs.map((tab) => {
-              const Icon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  onClick={() => onTabChange(tab.id)}
-                  className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    isActive
-                      ? "bg-sky-50 text-sky-700 shadow-sm"
-                      : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
-                  }`}
-                >
-                  <Icon className="w-4 h-4" />
-                  {tab.label}
-                </button>
-              );
-            })}
-          </nav>
+          <div className="flex items-center gap-2">
+            <nav className="hidden md:flex items-center gap-1">
+              {tabs.map((tab) => {
+                const Icon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    onClick={() => onTabChange(tab.id)}
+                    className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                      isActive
+                        ? "bg-sky-50 text-sky-700 shadow-sm"
+                        : "text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    {tab.label}
+                  </button>
+                );
+              })}
+            </nav>
+
+            <button
+              onClick={onToggleTheme}
+              className="theme-toggle p-2.5 rounded-xl border transition-colors"
+              title={darkMode ? "Tukar ke Light Mode" : "Tukar ke Dark Mode"}
+              aria-label={darkMode ? "Tukar ke Light Mode" : "Tukar ke Dark Mode"}
+            >
+              {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+          </div>
         </div>
 
-        {/* Mobile nav */}
         <div className="md:hidden flex overflow-x-auto gap-1 pb-3 -mx-1 px-1">
           {tabs.map((tab) => {
             const Icon = tab.icon;

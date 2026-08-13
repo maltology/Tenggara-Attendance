@@ -4,18 +4,20 @@ import { useState, useMemo } from "react";
 import { AttendanceRecord, Staff } from "@/lib/types";
 import { format, parseISO } from "date-fns";
 import { ms } from "date-fns/locale";
-import { Search, Trash2, Filter } from "lucide-react";
+import { Search, Trash2, Filter, RotateCcw } from "lucide-react";
 
 interface RecordsTableProps {
   records: AttendanceRecord[];
   staff: Staff[];
   onDelete: (id: string) => void;
+  onReset: () => void;
 }
 
 export default function RecordsTable({
   records,
   staff,
   onDelete,
+  onReset,
 }: RecordsTableProps) {
   const [search, setSearch] = useState("");
   const [filterStaff, setFilterStaff] = useState("all");
@@ -44,8 +46,7 @@ export default function RecordsTable({
 
   return (
     <div className="space-y-4">
-      {/* Filters */}
-      <div className="bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+      <div className="records-panel rounded-2xl border p-4 shadow-sm">
         <div className="flex flex-col sm:flex-row gap-3">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -64,9 +65,7 @@ export default function RecordsTable({
           >
             <option value="all">Semua Staff</option>
             {staff.map((s) => (
-              <option key={s.id} value={s.id}>
-                {s.name}
-              </option>
+              <option key={s.id} value={s.id}>{s.name}</option>
             ))}
           </select>
           <select
@@ -82,22 +81,27 @@ export default function RecordsTable({
             ))}
           </select>
         </div>
-        <div className="mt-3 flex items-center justify-between text-xs text-slate-500">
-          <span>
-            Memaparkan <strong>{filtered.length}</strong> rekod
-          </span>
-          <span>
-            Jumlah jam: <strong className="text-sky-700">{totalHours.toFixed(1)} j</strong>
-          </span>
+        <div className="mt-3 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 text-xs text-slate-500">
+          <span>Memaparkan <strong>{filtered.length}</strong> rekod</span>
+          <div className="flex items-center justify-between sm:justify-end gap-4">
+            <span>Jumlah jam: <strong className="text-sky-700">{totalHours.toFixed(1)} j</strong></span>
+            <button
+              onClick={onReset}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-rose-200 text-rose-600 hover:bg-rose-50 transition-colors font-medium"
+              title="Reset semua rekod kehadiran"
+            >
+              <RotateCcw className="w-3.5 h-3.5" />
+              Reset Data
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden">
+      <div className="records-table-panel rounded-2xl border shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="bg-slate-50 text-slate-600">
+              <tr className="records-table-head">
                 <th className="text-left px-5 py-3 font-medium">Bil.</th>
                 <th className="text-left px-5 py-3 font-medium">Nama Staff</th>
                 <th className="text-left px-5 py-3 font-medium">Tarikh</th>
@@ -110,41 +114,20 @@ export default function RecordsTable({
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="px-5 py-12 text-center text-slate-400">
-                    Tiada rekod dijumpai
-                  </td>
+                  <td colSpan={7} className="px-5 py-12 text-center text-slate-400">Tiada rekod dijumpai</td>
                 </tr>
               ) : (
                 filtered.map((r, idx) => (
-                  <tr
-                    key={r.id}
-                    className="border-t border-slate-100 hover:bg-slate-50/50 transition-colors"
-                  >
+                  <tr key={r.id} className="border-t border-slate-100 hover:bg-slate-50/50 transition-colors">
                     <td className="px-5 py-3 text-slate-500">{idx + 1}</td>
-                    <td className="px-5 py-3 font-medium text-slate-800">
-                      {r.staffName}
-                    </td>
-                    <td className="px-5 py-3 text-slate-600">
-                      {format(parseISO(r.date), "dd MMM yyyy", { locale: ms })}
-                    </td>
-                    <td className="px-5 py-3">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-mono text-xs">
-                        {r.clockIn}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 font-mono text-xs">
-                        {r.clockOut}
-                      </span>
-                    </td>
-                    <td className="px-5 py-3 text-right font-semibold text-slate-800">
-                      {r.totalHours.toFixed(2)} j
-                    </td>
+                    <td className="px-5 py-3 font-medium text-slate-800">{r.staffName}</td>
+                    <td className="px-5 py-3 text-slate-600">{format(parseISO(r.date), "dd MMM yyyy", { locale: ms })}</td>
+                    <td className="px-5 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-mono text-xs">{r.clockIn}</span></td>
+                    <td className="px-5 py-3"><span className="inline-flex items-center px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 font-mono text-xs">{r.clockOut}</span></td>
+                    <td className="px-5 py-3 text-right font-semibold text-slate-800">{r.totalHours.toFixed(2)} j</td>
                     <td className="px-5 py-3 text-center">
                       <button
-                        onClick={() => {
-                          if (confirm("Padam rekod ini?")) onDelete(r.id);
-                        }}
+                        onClick={() => { if (confirm("Padam rekod ini?")) onDelete(r.id); }}
                         className="p-1.5 rounded-lg text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors"
                         title="Padam"
                       >

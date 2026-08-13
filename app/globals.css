@@ -13,6 +13,101 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
+/* Dark mode is intentionally scoped to the application shell so existing
+   component structure and functionality remain unchanged. */
+.dark-theme body,
+.dark-theme .app-shell {
+  --foreground: #e2e8f0;
+  --background: #0f172a;
+  color: #e2e8f0;
+  background: #0f172a;
+}
+
+.dark-theme .app-header {
+  background: #111827;
+  border-color: #334155;
+}
+
+.dark-theme .app-header .text-slate-800 { color: #f1f5f9 !important; }
+.dark-theme .app-header .text-slate-500 { color: #94a3b8 !important; }
+.dark-theme .app-header .text-slate-600 { color: #cbd5e1 !important; }
+.dark-theme .app-header .hover\\:bg-slate-100:hover { background: #1e293b !important; }
+.dark-theme .app-header .bg-sky-50 { background: #082f49 !important; }
+.dark-theme .app-header .text-sky-700 { color: #7dd3fc !important; }
+
+.dark-theme .theme-toggle {
+  background: #1e293b;
+  border-color: #475569;
+  color: #facc15;
+}
+
+.dark-theme .records-panel,
+.dark-theme .records-table-panel {
+  background: #111827;
+  border-color: #334155;
+}
+
+.dark-theme input,
+.dark-theme select {
+  background: #0f172a !important;
+  color: #e2e8f0 !important;
+  border-color: #475569 !important;
+}
+
+.dark-theme .records-table-head {
+  background: #1e293b;
+  color: #cbd5e1;
+}
+
+.dark-theme .records-table-panel tbody tr {
+  border-color: #334155;
+}
+
+.dark-theme .records-table-panel tbody tr:hover {
+  background: #1e293b;
+}
+
+.dark-theme .records-table-panel .text-slate-800 { color: #f1f5f9 !important; }
+.dark-theme .records-table-panel .text-slate-600 { color: #cbd5e1 !important; }
+.dark-theme .records-table-panel .text-slate-500 { color: #94a3b8 !important; }
+
+.dark-theme .bg-white {
+  background-color: #111827 !important;
+}
+
+.dark-theme .border-slate-200,
+.dark-theme .border-slate-100 {
+  border-color: #334155 !important;
+}
+
+.dark-theme .text-slate-900,
+.dark-theme .text-slate-800 {
+  color: #f1f5f9 !important;
+}
+
+.dark-theme .text-slate-700,
+.dark-theme .text-slate-600 {
+  color: #cbd5e1 !important;
+}
+
+.dark-theme .text-slate-500,
+.dark-theme .text-slate-400 {
+  color: #94a3b8 !important;
+}
+
+.dark-theme .bg-slate-50 {
+  background-color: #1e293b !important;
+}
+
+.dark-theme .hover\\:bg-slate-50:hover {
+  background-color: #1e293b !important;
+}
+
+.dark-theme .bg-emerald-50 { background-color: #052e1b !important; color: #6ee7b7 !important; }
+.dark-theme .bg-rose-50 { background-color: #450a0a !important; color: #fda4af !important; }
+.dark-theme .text-emerald-700 { color: #6ee7b7 !important; }
+.dark-theme .text-rose-700 { color: #fda4af !important; }
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -28,3 +123,7 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #64748b;
 }
+
+.dark-theme ::-webkit-scrollbar-track { background: #1e293b; }
+.dark-theme ::-webkit-scrollbar-thumb { background: #475569; }
+.dark-theme ::-webkit-scrollbar-thumb:hover { background: #64748b; }
