@@ -18,13 +18,21 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [staff, setStaff] = useState<Staff[]>([]);
   const [records, setRecords] = useState<AttendanceRecord[]>([]);
+  const [darkMode, setDarkMode] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
     setStaff(loadStaff());
     setRecords(loadAttendance());
+    setDarkMode(localStorage.getItem("tenggara-theme") === "dark");
     setLoaded(true);
   }, []);
+
+  useEffect(() => {
+    if (!loaded) return;
+    localStorage.setItem("tenggara-theme", darkMode ? "dark" : "light");
+    document.documentElement.classList.toggle("dark-theme", darkMode);
+  }, [darkMode, loaded]);
 
   useEffect(() => {
     if (loaded) saveStaff(staff);
@@ -47,6 +55,19 @@ export default function Home() {
     setRecords((prev) => prev.filter((r) => r.id !== id));
   };
 
+  const handleResetAttendance = () => {
+    if (records.length === 0) {
+      alert("Tiada rekod kehadiran untuk direset.");
+      return;
+    }
+
+    const confirmed = confirm(
+      `AMARAN: Anda akan memadam SEMUA ${records.length} rekod kehadiran.\n\nData staff tidak akan dipadam. Tindakan ini tidak boleh dibuat asal. Teruskan?`
+    );
+
+    if (confirmed) setRecords([]);
+  };
+
   if (!loaded) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -56,8 +77,13 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50">
-      <Header activeTab={activeTab} onTabChange={setActiveTab} />
+    <div className="min-h-screen app-shell">
+      <Header
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        darkMode={darkMode}
+        onToggleTheme={() => setDarkMode((prev) => !prev)}
+      />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         {activeTab === "dashboard" && (
@@ -68,6 +94,7 @@ export default function Home() {
             records={records}
             staff={staff}
             onDelete={handleDeleteRecord}
+            onReset={handleResetAttendance}
           />
         )}
         {activeTab === "checkin" && (
